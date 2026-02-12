@@ -1,0 +1,245 @@
+/* Mobile Booking Widget Styles */
+
+:root {
+    --vb-mw-primary: #1a2b48;
+    --vb-mw-text: #ffffff;
+    --vb-mw-bg: #ffffff;
+    --vb-mw-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.vb-mw-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999999;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+.vb-mw-bar {
+    display: flex;
+    box-shadow: var(--vb-mw-shadow);
+    height: 70px;
+}
+
+.vb-mw-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    transition: opacity 0.2s;
+}
+
+.vb-mw-btn:active {
+    opacity: 0.8;
+}
+
+.vb-mw-prenota {
+    background: var(--vb-mw-prenota-bg);
+    color: var(--vb-mw-prenota-text);
+}
+
+.vb-mw-chiama {
+    background: var(--vb-mw-chiama-bg);
+    color: var(--vb-mw-chiama-text);
+}
+
+.vb-mw-offerta {
+    background: var(--vb-mw-offerta-bg);
+    color: var(--vb-mw-offerta-text);
+}
+
+.vb-mw-btn span {
+    font-size: 11px;
+    font-weight: 700;
+    margin-top: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Modal Styles */
+.vb-mw-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: flex-end;
+    z-index: 1000000;
+}
+
+.vb-mw-modal-content {
+    background: var(--vb-mw-bg);
+    width: 100%;
+    border-radius: 20px 20px 0 0;
+    padding: 20px;
+    box-sizing: border-box;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
+
+.vb-mw-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.vb-mw-modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+}
+
+.vb-mw-close-btn {
+    background: none;
+    border: none;
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    color: #999;
+}
+
+/* Calendar placeholder styles */
+.vb-mw-calendar-wrapper {
+    margin-bottom: 20px;
+}
+
+.vb-mw-calendar-month {
+    width: 100%;
+}
+
+.vb-mw-calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+}
+
+.vb-mw-cal-day-name {
+    font-weight: bold;
+    font-size: 12px;
+    color: #888;
+    padding: 10px 0;
+}
+
+.vb-mw-cal-day {
+    padding: 12px 0;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.vb-mw-cal-day.disabled {
+    color: #ccc;
+    cursor: default;
+}
+
+.vb-mw-cal-day.booked {
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+
+.vb-mw-cal-day:not(.disabled):not(.empty):hover {
+    background: #eeeeee;
+}
+
+.vb-mw-cal-day.today {
+    font-weight: bold;
+    color: var(--vb-mw-primary);
+}
+
+.vb-mw-cal-day.selected {
+    background: var(--vb-mw-primary) !important;
+    color: var(--vb-mw-text) !important;
+}
+
+.vb-mw-cal-day.in-range {
+    background: var(--vb-mw-primary-light);
+    color: var(--vb-mw-text);
+}
+
+/* Guest Selector */
+.vb-mw-guests-selector {
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+.vb-mw-guest-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.vb-mw-counter {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.vb-mw-counter button {
+    width: 40px;
+    height: 40px;
+    background: #f8f8f8;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.vb-mw-counter input {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    border: none;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    font-size: 16px;
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+.vb-mw-counter input::-webkit-outer-spin-button,
+.vb-mw-counter input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.vb-mw-confirm-btn {
+    width: 100%;
+    background: var(--vb-mw-primary);
+    color: var(--vb-mw-text);
+    border: none;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+/* Visibility */
+@media (min-width: 769px) {
+    .vb-mw-container {
+        display: none !important;
+    }
+}

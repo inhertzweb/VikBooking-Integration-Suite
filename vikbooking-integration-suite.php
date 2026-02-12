@@ -63,6 +63,10 @@ function vb_integration_init() {
     new VB_Booking_Handler();
     new VB_Google_Analytics_Integration();
     new VB_FluentCRM_Integration();
+    
+    // Initialize Mobile Widget
+    require_once VB_INTEGRATION_PLUGIN_PATH . 'includes/class-mobile-widget.php';
+    VB_Mobile_Widget::init();
 }
 
 // Hook initialization to plugins_loaded to ensure all plugins are loaded
@@ -118,6 +122,17 @@ function vb_integration_create_tables()
     add_option('vb_integration_cm_email_enabled', '0');
     add_option('vb_integration_cm_email_address', get_option('admin_email'));
     add_option('vb_integration_fluentcrm_enabled', '1');
+
+    // Mobile Widget Options
+    add_option('vb_integration_mw_enabled', '0');
+    add_option('vb_integration_mw_prenota_bg', '#faff4d');
+    add_option('vb_integration_mw_prenota_text', '#000000');
+    add_option('vb_integration_mw_chiama_bg', '#ffffff');
+    add_option('vb_integration_mw_chiama_text', '#000000');
+    add_option('vb_integration_mw_chiama_link', '');
+    add_option('vb_integration_mw_offerta_bg', '#69b1e9');
+    add_option('vb_integration_mw_offerta_text', '#ffffff');
+    add_option('vb_integration_mw_offerta_link', '');
 }
 
 // Clean up on deactivation

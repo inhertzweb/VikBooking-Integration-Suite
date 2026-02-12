@@ -13,6 +13,17 @@ if (isset($_POST['vb_integration_save'])) {
     update_option('vb_integration_cm_email_enabled', isset($_POST['cm_email_enabled']) ? '1' : '0');
     update_option('vb_integration_cm_email_address', sanitize_email($_POST['cm_email_address']));
     update_option('vb_integration_fluentcrm_enabled', isset($_POST['fluentcrm_enabled']) ? '1' : '0');
+
+    // Mobile Widget Settings
+    update_option('vb_integration_mw_enabled', isset($_POST['mw_enabled']) ? '1' : '0');
+    update_option('vb_integration_mw_prenota_bg', sanitize_hex_color($_POST['mw_prenota_bg']));
+    update_option('vb_integration_mw_prenota_text', sanitize_hex_color($_POST['mw_prenota_text']));
+    update_option('vb_integration_mw_chiama_bg', sanitize_hex_color($_POST['mw_chiama_bg']));
+    update_option('vb_integration_mw_chiama_text', sanitize_hex_color($_POST['mw_chiama_text']));
+    update_option('vb_integration_mw_chiama_link', sanitize_text_field($_POST['mw_chiama_link']));
+    update_option('vb_integration_mw_offerta_bg', sanitize_hex_color($_POST['mw_offerta_bg']));
+    update_option('vb_integration_mw_offerta_text', sanitize_hex_color($_POST['mw_offerta_text']));
+    update_option('vb_integration_mw_offerta_link', sanitize_text_field($_POST['mw_offerta_link']));
     
     echo '<div class="notice notice-success"><p>Impostazioni salvate con successo!</p></div>';
 }
@@ -23,6 +34,17 @@ $ga_api_secret = get_option('vb_integration_ga_api_secret', '');
 $cm_email_enabled = get_option('vb_integration_cm_email_enabled', '0');
 $cm_email_address = get_option('vb_integration_cm_email_address', get_option('admin_email'));
 $fluentcrm_enabled = get_option('vb_integration_fluentcrm_enabled', '1');
+
+// Mobile Widget Settings
+$mw_enabled = get_option('vb_integration_mw_enabled', '0');
+$mw_prenota_bg = get_option('vb_integration_mw_prenota_bg', '#faff4d');
+$mw_prenota_text = get_option('vb_integration_mw_prenota_text', '#000000');
+$mw_chiama_bg = get_option('vb_integration_mw_chiama_bg', '#ffffff');
+$mw_chiama_text = get_option('vb_integration_mw_chiama_text', '#000000');
+$mw_chiama_link = get_option('vb_integration_mw_chiama_link', '');
+$mw_offerta_bg = get_option('vb_integration_mw_offerta_bg', '#69b1e9');
+$mw_offerta_text = get_option('vb_integration_mw_offerta_text', '#ffffff');
+$mw_offerta_link = get_option('vb_integration_mw_offerta_link', '');
 ?>
 
 <div class="wrap">
@@ -85,6 +107,44 @@ $fluentcrm_enabled = get_option('vb_integration_fluentcrm_enabled', '1');
                         Aggiungi automaticamente i clienti a FluentCRM
                     </label>
                     <p class="description">I contatti verranno aggiunti alla lista "Ospiti Hotel" con tag appropriati</p>
+                </td>
+            </tr>
+        </table>
+
+        <h2>Mobile Booking Widget</h2>
+        <table class="form-table">
+            <tr>
+                <th scope="row">Abilita Widget Mobile</th>
+                <td>
+                    <label>
+                        <input type="checkbox" name="mw_enabled" value="1" <?php checked($mw_enabled, '1'); ?> />
+                        Mostra il widget in fondo alla pagina sui dispositivi mobili
+                    </label>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Tasto "PRENOTA"</th>
+                <td>
+                    BG: <input type="color" name="mw_prenota_bg" value="<?php echo esc_attr($mw_prenota_bg); ?>" />
+                    Testo: <input type="color" name="mw_prenota_text" value="<?php echo esc_attr($mw_prenota_text); ?>" />
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Tasto "CHIAMA"</th>
+                <td>
+                    BG: <input type="color" name="mw_chiama_bg" value="<?php echo esc_attr($mw_chiama_bg); ?>" />
+                    Testo: <input type="color" name="mw_chiama_text" value="<?php echo esc_attr($mw_chiama_text); ?>" />
+                    <br><br>
+                    Link: <input type="text" name="mw_chiama_link" value="<?php echo esc_attr($mw_chiama_link); ?>" class="regular-text" placeholder="tel:+39012345678" />
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Tasto "OFFERTA"</th>
+                <td>
+                    BG: <input type="color" name="mw_offerta_bg" value="<?php echo esc_attr($mw_offerta_bg); ?>" />
+                    Testo: <input type="color" name="mw_offerta_text" value="<?php echo esc_attr($mw_offerta_text); ?>" />
+                    <br><br>
+                    Link: <input type="text" name="mw_offerta_link" value="<?php echo esc_attr($mw_offerta_link); ?>" class="regular-text" placeholder="https://..." />
                 </td>
             </tr>
         </table>
@@ -193,6 +253,19 @@ $fluentcrm_enabled = get_option('vb_integration_fluentcrm_enabled', '1');
                     <?php else: ?>
                         Abilita per ricevere notifiche OTA
                     <?php endif; ?>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Mobile Widget</strong></td>
+                <td>
+                    <?php if ($mw_enabled): ?>
+                        <span style="color: green;">✓ Abilitato</span>
+                    <?php else: ?>
+                        <span style="color: gray;">○ Disabilitato</span>
+                    <?php endif; ?>
+                </td>
+                <td>
+                    Configura colori e collegamenti sopra
                 </td>
             </tr>
         </tbody>
