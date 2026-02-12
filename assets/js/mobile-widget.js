@@ -22,6 +22,13 @@ jQuery(document).ready(function ($) {
             success: function (response) {
                 if (response.success) {
                     bookedDates = response.data;
+
+                    // Check if current view date (initially today) is closed based on loaded data
+                    if (isMonthFullyClosed(currentViewDate.getMonth(), currentViewDate.getFullYear())) {
+                        const next = getNextAvailableMonth(currentViewDate, 1);
+                        if (next) currentViewDate = next;
+                    }
+
                     renderCalendar();
                 }
             }
@@ -68,11 +75,6 @@ jQuery(document).ready(function ($) {
 
     // Simple Calendar Implementation
     let currentViewDate = new Date();
-    // Initialize View Date to first available month if needed
-    if (isMonthFullyClosed(currentViewDate.getMonth(), currentViewDate.getFullYear())) {
-        const next = getNextAvailableMonth(currentViewDate, 1);
-        if (next) currentViewDate = next;
-    }
 
     function getNextAvailableMonth(date, direction = 1) {
         let tempDate = new Date(date);
