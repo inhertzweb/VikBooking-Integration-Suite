@@ -2,7 +2,7 @@
 /**
  * Plugin Name: VikBooking Integration Suite
  * Description: Integrazione con VikBooking per Google Analytics e FluentCRM
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: Inhertzweb Agency
  */
 
@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('VB_INTEGRATION_VERSION', '1.0.0');
+define('VB_INTEGRATION_VERSION', '1.1.0');
 define('VB_INTEGRATION_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('VB_INTEGRATION_PLUGIN_PATH', plugin_dir_path(__FILE__));
 
