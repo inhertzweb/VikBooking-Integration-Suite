@@ -29,6 +29,7 @@ jQuery(document).ready(function ($) {
     }
 
     fetchAvailability();
+    updateConfirmLink();
 
     // Open/Close Modal
     $openBtn.on('click', function () {
@@ -62,6 +63,7 @@ jQuery(document).ready(function ($) {
         $input.val(val);
         if (target === 'adults') adults = val;
         if (target === 'children') children = val;
+        updateConfirmLink();
     });
 
     // Simple Calendar Implementation
@@ -226,19 +228,27 @@ jQuery(document).ready(function ($) {
                 }
             });
         }
+        updateConfirmLink();
     }
 
-    // Confirm and Redirect
-    $confirmBtn.on('click', function () {
+    // Dynamic Link Update
+    function updateConfirmLink() {
         if (!checkIn || !checkOut) {
-            alert('Seleziona le date di check-in e check-out');
+            $confirmBtn.attr('href', '#');
+            $confirmBtn.css('opacity', '0.5');
             return;
         }
 
+        $confirmBtn.css('opacity', '1');
+
         const formatDate = (date) => {
-            const d = date.getDate().toString().padStart(2, '0');
-            const m = (date.getMonth() + 1).toString().padStart(2, '0');
+            const d = String(date.getDate()).padStart(2, '0');
+            const m = String(date.getMonth() + 1).padStart(2, '0');
             const y = date.getFullYear();
+
+            // VikBooking usually expects standard format, but let's respect settings if needed
+            // However, for URL parameters, YYYY-MM-DD or specific format might be required by controller
+            // Let's stick to the previous logic which seemed to map to VikBooking expectations
 
             const format = vbMWSettings.dateFormat || '%d/%m/%Y';
 
@@ -261,8 +271,15 @@ jQuery(document).ready(function ($) {
 
         url += `option=com_vikbooking&view=search&task=search`;
         url += `&checkindate=${ci}&checkoutdate=${co}`;
-        url += `&adults[]=${adults}&children[]=${children}&roomsnum=1`;
+        url += `&adults=${adults}&children=${children}&roomsnum=1`;
 
-        window.location.href = url;
+        $confirmBtn.attr('href', url);
+    }
+
+    $confirmBtn.on('click', function (e) {
+        if ($(this).attr('href') === '#') {
+            e.preventDefault();
+            alert('Seleziona le date di check-in e check-out');
+        }
     });
 });

@@ -116,7 +116,7 @@ class VB_Mobile_Widget {
                         </div>
                     </div>
                     <div class="vb-mw-modal-footer">
-                        <button id="vb-mw-confirm" class="vb-mw-confirm-btn">CONFERMA E PRENOTA</button>
+                        <a href="#" id="vb-mw-confirm" class="vb-mw-confirm-btn" style="display:block; text-align:center; text-decoration:none;">CONFERMA E PRENOTA</a>
                     </div>
                 </div>
             </div>
