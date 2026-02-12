@@ -24,6 +24,7 @@ if (isset($_POST['vb_integration_save'])) {
     update_option('vb_integration_mw_offerta_bg', sanitize_hex_color($_POST['mw_offerta_bg']));
     update_option('vb_integration_mw_offerta_text', sanitize_hex_color($_POST['mw_offerta_text']));
     update_option('vb_integration_mw_offerta_link', sanitize_text_field($_POST['mw_offerta_link']));
+    update_option('vb_integration_mw_booking_url', sanitize_text_field($_POST['mw_booking_url']));
     
     echo '<div class="notice notice-success"><p>Impostazioni salvate con successo!</p></div>';
 }
@@ -45,6 +46,7 @@ $mw_chiama_link = get_option('vb_integration_mw_chiama_link', '');
 $mw_offerta_bg = get_option('vb_integration_mw_offerta_bg', '#69b1e9');
 $mw_offerta_text = get_option('vb_integration_mw_offerta_text', '#ffffff');
 $mw_offerta_link = get_option('vb_integration_mw_offerta_link', '');
+$mw_booking_url = get_option('vb_integration_mw_booking_url', '');
 ?>
 
 <div class="wrap">
@@ -145,6 +147,13 @@ $mw_offerta_link = get_option('vb_integration_mw_offerta_link', '');
                     Testo: <input type="color" name="mw_offerta_text" value="<?php echo esc_attr($mw_offerta_text); ?>" />
                     <br><br>
                     Link: <input type="text" name="mw_offerta_link" value="<?php echo esc_attr($mw_offerta_link); ?>" class="regular-text" placeholder="https://..." />
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Pagina Prenotazione</th>
+                <td>
+                    <input type="text" name="mw_booking_url" value="<?php echo esc_attr($mw_booking_url); ?>" class="regular-text" placeholder="https://..." />
+                    <p class="description">URL della pagina dove è presente lo shortcode di VikBooking (es. /prenota). Se vuoto, userà la home.</p>
                 </td>
             </tr>
         </table>

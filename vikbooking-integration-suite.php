@@ -133,6 +133,7 @@ function vb_integration_create_tables()
     add_option('vb_integration_mw_offerta_bg', '#69b1e9');
     add_option('vb_integration_mw_offerta_text', '#ffffff');
     add_option('vb_integration_mw_offerta_link', '');
+    add_option('vb_integration_mw_booking_url', '');
 }
 
 // Clean up on deactivation

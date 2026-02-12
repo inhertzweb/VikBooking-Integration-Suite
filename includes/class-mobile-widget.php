@@ -56,10 +56,13 @@ class VB_Mobile_Widget {
     }
 
     private static function get_booking_url() {
-        $booking_page_id = get_option('vbo_page_id_booking');
-        if ($booking_page_id) {
-            return get_permalink($booking_page_id);
+        $booking_url = get_option('vb_integration_mw_booking_url');
+        if ($booking_url) {
+            return $booking_url;
         }
+        
+        // Fallback to searching for a page with the shortcode if no URL is set
+        // This is a bit resource intensive so it's better if the user sets it
         return home_url('/');
     }
 
