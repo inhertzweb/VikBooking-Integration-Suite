@@ -102,7 +102,7 @@ jQuery(document).ready(function ($) {
         const month = currentViewDate.getMonth();
         const year = currentViewDate.getFullYear();
 
-        const monthNames = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno",
+        const monthNames = vbMWSettings.monthNames || ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno",
             "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"
         ];
 
@@ -140,7 +140,7 @@ jQuery(document).ready(function ($) {
     });
 
     function renderMonthGrid(month, year) {
-        const dayNames = ["Lu", "Ma", "Me", "Gi", "Ve", "Sa", "Do"];
+        const dayNames = vbMWSettings.dayNames || ["Lu", "Ma", "Me", "Gi", "Ve", "Sa", "Do"];
         const firstDay = new Date(year, month, 1).getDay();
         const daysInMonth = new Date(year, month + 1, 0).getDate();
 
@@ -237,7 +237,7 @@ jQuery(document).ready(function ($) {
             }
 
             if (hasBookedInRange) {
-                alert('La selezione contiene date non disponibili. Scegliere un altro intervallo.');
+                alert(vbMWSettings.labels.selectionError || 'La selezione contiene date non disponibili. Scegliere un altro intervallo.');
             } else {
                 checkOut = selectedDate;
             }
@@ -327,7 +327,7 @@ jQuery(document).ready(function ($) {
     $confirmBtn.on('click', function (e) {
         if ($(this).attr('href') === '#') {
             e.preventDefault();
-            alert('Seleziona le date di check-in e check-out');
+            alert(vbMWSettings.labels.selectDates || 'Seleziona le date di check-in e check-out');
         }
     });
 });

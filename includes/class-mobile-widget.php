@@ -32,6 +32,33 @@ class VB_Mobile_Widget {
             'ajaxUrl'      => admin_url('admin-ajax.php'),
             'bookingUrl'   => self::get_booking_url(),
             'dateFormat'   => class_exists('VikBooking') ? VikBooking::getDateFormat() : '%d/%m/%Y',
+            'monthNames'   => [
+                __('Gennaio', 'vikbooking-integration-suite'),
+                __('Febbraio', 'vikbooking-integration-suite'),
+                __('Marzo', 'vikbooking-integration-suite'),
+                __('Aprile', 'vikbooking-integration-suite'),
+                __('Maggio', 'vikbooking-integration-suite'),
+                __('Giugno', 'vikbooking-integration-suite'),
+                __('Luglio', 'vikbooking-integration-suite'),
+                __('Agosto', 'vikbooking-integration-suite'),
+                __('Settembre', 'vikbooking-integration-suite'),
+                __('Ottobre', 'vikbooking-integration-suite'),
+                __('Novembre', 'vikbooking-integration-suite'),
+                __('Dicembre', 'vikbooking-integration-suite'),
+            ],
+            'dayNames'     => [
+                __('Lu', 'vikbooking-integration-suite'),
+                __('Ma', 'vikbooking-integration-suite'),
+                __('Me', 'vikbooking-integration-suite'),
+                __('Gi', 'vikbooking-integration-suite'),
+                __('Ve', 'vikbooking-integration-suite'),
+                __('Sa', 'vikbooking-integration-suite'),
+                __('Do', 'vikbooking-integration-suite'),
+            ],
+            'labels'       => [
+                'selectionError' => __('La selezione contiene date non disponibili. Scegliere un altro intervallo.', 'vikbooking-integration-suite'),
+                'selectDates'    => __('Seleziona le date di check-in e check-out', 'vikbooking-integration-suite'),
+            ]
         ]);
         
         // Dynamic CSS for colors
@@ -58,6 +85,10 @@ class VB_Mobile_Widget {
     private static function get_booking_url() {
         $booking_url = get_option('vb_integration_mw_booking_url');
         if ($booking_url) {
+            // If it's a relative path, wrap it in home_url to let plugins handle locale
+            if (strpos($booking_url, 'http') !== 0) {
+                return home_url($booking_url);
+            }
             return $booking_url;
         }
         
@@ -74,17 +105,18 @@ class VB_Mobile_Widget {
             <div class="vb-mw-bar">
                 <button id="vb-mw-open-calendar" class="vb-mw-btn vb-mw-prenota">
                     <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M19,7H11V14H3V5H1V20H3V17H21V20H23V11A4,4 0 0,0 19,7M7,13A3,3 0 0,0 10,10A3,3 0 0,0 7,7A3,3 0 0,0 4,10A3,3 0 0,0 7,13Z"/></svg>
-                    <span>PRENOTA</span>
+                    <span><?php _e('PRENOTA', 'vikbooking-integration-suite'); ?></span>
                 </button>
 
+        
                 <a href="<?php echo esc_url($chiama_link ?: '#'); ?>" class="vb-mw-btn vb-mw-chiama">
                     <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M6.62,10.79C8.06,13.62 10.38,15.94 13.21,17.38L15.41,15.18C15.69,14.9 16.08,14.82 16.43,14.93C17.55,15.3 18.75,15.5 20,15.5A1,1 0 0,1 21,16.5V20A1,1 0 0,1 20,21A17,17 0 0,1 3,4A1,1 0 0,1 4,3H7.5A1,1 0 0,1 8.5,4C8.5,5.25 8.7,6.45 9.07,7.57C9.18,7.92 9.1,8.31 8.82,8.59L6.62,10.79Z"/></svg>
-                    <span>CHIAMA</span>
+                    <span><?php _e('CHIAMA', 'vikbooking-integration-suite'); ?></span>
                 </a>
 
                 <a href="<?php echo esc_url($offerta_link ?: '#'); ?>" class="vb-mw-btn vb-mw-offerta">
                     <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M20,8L12,13L4,8V6L12,11L20,6M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4Z"/></svg>
-                    <span>RICHIEDI OFFERTA</span>
+                    <span><?php _e('RICHIEDI OFFERTA', 'vikbooking-integration-suite'); ?></span>
                 </a>
             </div>
 
@@ -92,7 +124,7 @@ class VB_Mobile_Widget {
             <div id="vb-mw-modal" class="vb-mw-modal" style="display: none;">
                 <div class="vb-mw-modal-content">
                     <div class="vb-mw-modal-header">
-                        <h3>Seleziona Date</h3>
+                        <h3><?php _e('Seleziona Date', 'vikbooking-integration-suite'); ?></h3>
                         <button id="vb-mw-modal-close" class="vb-mw-close">&times;</button>
                     </div>
                     <div class="vb-mw-modal-body">
@@ -101,7 +133,7 @@ class VB_Mobile_Widget {
                         </div>
                         <div class="vb-mw-guests-selector">
                             <div class="vb-mw-guest-row">
-                                <span>Adulti</span>
+                                <span><?php _e('Adulti', 'vikbooking-integration-suite'); ?></span>
                                 <div class="vb-mw-counter">
                                     <button class="vb-mw-minus" data-target="adults">-</button>
                                     <input type="number" id="mw-adults" value="2" readonly>
@@ -109,7 +141,7 @@ class VB_Mobile_Widget {
                                 </div>
                             </div>
                             <div class="vb-mw-guest-row">
-                                <span>Bambini</span>
+                                <span><?php _e('Bambini', 'vikbooking-integration-suite'); ?></span>
                                 <div class="vb-mw-counter">
                                     <button class="vb-mw-minus" data-target="children">-</button>
                                     <input type="number" id="mw-children" value="0" readonly>
@@ -119,7 +151,7 @@ class VB_Mobile_Widget {
                         </div>
                     </div>
                     <div class="vb-mw-modal-footer">
-                        <a href="#" id="vb-mw-confirm" class="vb-mw-confirm-btn" style="display:block; text-align:center; text-decoration:none;">CONFERMA E PRENOTA</a>
+                        <a href="#" id="vb-mw-confirm" class="vb-mw-confirm-btn" style="display:block; text-align:center; text-decoration:none;"><?php _e('CONFERMA E PRENOTA', 'vikbooking-integration-suite'); ?></a>
                     </div>
                 </div>
             </div>
