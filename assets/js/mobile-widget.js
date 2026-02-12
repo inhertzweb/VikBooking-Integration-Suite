@@ -306,9 +306,18 @@ jQuery(document).ready(function ($) {
         if (url.indexOf('?') === -1) url += '?';
         else url += '&';
 
-        url += `option=com_vikbooking&view=search&task=search`;
+        // Base params
+        url += `option=com_vikbooking&task=search`;
+
+        // Dates
         url += `&checkindate=${ci}&checkoutdate=${co}`;
-        url += `&adults=${adults}&children=${children}&roomsnum=1`;
+
+        // Times (Hardcoded defaults as per request: 14:30 checkin, 10:30 checkout)
+        url += `&checkinh=14&checkinm=30&checkouth=10&checkoutm=30`;
+
+        // Items and Guests
+        url += `&roomsnum=1`;
+        url += `&adults[0]=${adults}&children[0]=${children}`;
 
         $confirmBtn.attr('href', url);
     }
