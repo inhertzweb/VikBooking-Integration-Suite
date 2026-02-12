@@ -1,0 +1,99 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: VikBooking Integration Suite 1.1.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-05-22 12:00+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Domain: vikbooking-integration-suite\n"
+
+msgid "Seleziona Date"
+msgstr ""
+
+msgid "Adulti"
+msgstr ""
+
+msgid "Bambini"
+msgstr ""
+
+msgid "PRENOTA"
+msgstr ""
+
+msgid "CHIAMA"
+msgstr ""
+
+msgid "RICHIEDI OFFERTA"
+msgstr ""
+
+msgid "CONFERMA E PRENOTA"
+msgstr ""
+
+msgid "La selezione contiene date non disponibili. Scegliere un altro intervallo."
+msgstr ""
+
+msgid "Seleziona le date di check-in e check-out"
+msgstr ""
+
+msgid "Gennaio"
+msgstr ""
+
+msgid "Febbraio"
+msgstr ""
+
+msgid "Marzo"
+msgstr ""
+
+msgid "Aprile"
+msgstr ""
+
+msgid "Maggio"
+msgstr ""
+
+msgid "Giugno"
+msgstr ""
+
+msgid "Luglio"
+msgstr ""
+
+msgid "Agosto"
+msgstr ""
+
+msgid "Settembre"
+msgstr ""
+
+msgid "Ottobre"
+msgstr ""
+
+msgid "Novembre"
+msgstr ""
+
+msgid "Dicembre"
+msgstr ""
+
+msgid "Lu"
+msgstr ""
+
+msgid "Ma"
+msgstr ""
+
+msgid "Me"
+msgstr ""
+
+msgid "Gi"
+msgstr ""
+
+msgid "Ve"
+msgstr ""
+
+msgid "Sa"
+msgstr ""
+
+msgid "Do"
+msgstr ""

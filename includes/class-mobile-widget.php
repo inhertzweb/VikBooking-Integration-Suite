@@ -18,9 +18,16 @@ class VB_Mobile_Widget {
         add_action('wp_enqueue_scripts', [__CLASS__, 'enqueue_assets']);
         add_action('wp_footer', [self::class, 'render_widget']);
 
+        // Load Text Domain
+        add_action('init', [self::class, 'load_textdomain']);
+
         // AJAX for availability
         add_action('wp_ajax_vb_mw_get_availability', [self::class, 'ajax_get_availability']);
         add_action('wp_ajax_nopriv_vb_mw_get_availability', [self::class, 'ajax_get_availability']);
+    }
+
+    public static function load_textdomain() {
+        load_plugin_textdomain('vikbooking-integration-suite', false, dirname(plugin_basename(__FILE__)) . '/../languages');
     }
 
     public static function enqueue_assets() {

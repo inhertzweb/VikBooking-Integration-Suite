@@ -1,0 +1,98 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: VikBooking Integration Suite 1.1.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-05-22 12:00+0000\n"
+"PO-Revision-Date: 2024-05-22 12:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: de_DE\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.4.2\n"
+
+msgid "Seleziona Date"
+msgstr "Daten auswählen"
+
+msgid "Adulti"
+msgstr "Erwachsene"
+
+msgid "Bambini"
+msgstr "Kinder"
+
+msgid "PRENOTA"
+msgstr "BUCHEN"
+
+msgid "CHIAMA"
+msgstr "ANRUFEN"
+
+msgid "RICHIEDI OFFERTA"
+msgstr "ANGEBOT ANFORDERN"
+
+msgid "CONFERMA E PRENOTA"
+msgstr "BESTÄTIGEN UND BUCHEN"
+
+msgid "La selezione contiene date non disponibili. Scegliere un altro intervallo."
+msgstr "Die Auswahl enthält nicht verfügbare Daten. Bitte wählen Sie einen anderen Zeitraum."
+
+msgid "Seleziona le date di check-in e check-out"
+msgstr "Bitte wählen Sie das An- und Abreisedatum"
+
+msgid "Gennaio"
+msgstr "Januar"
+
+msgid "Febbraio"
+msgstr "Februar"
+
+msgid "Marzo"
+msgstr "März"
+
+msgid "Aprile"
+msgstr "April"
+
+msgid "Maggio"
+msgstr "Mai"
+
+msgid "Giugno"
+msgstr "Juni"
+
+msgid "Luglio"
+msgstr "Juli"
+
+msgid "Agosto"
+msgstr "August"
+
+msgid "Settembre"
+msgstr "September"
+
+msgid "Ottobre"
+msgstr "Oktober"
+
+msgid "Novembre"
+msgstr "November"
+
+msgid "Dicembre"
+msgstr "Dezember"
+
+msgid "Lu"
+msgstr "Mo"
+
+msgid "Ma"
+msgstr "Di"
+
+msgid "Me"
+msgstr "Mi"
+
+msgid "Gi"
+msgstr "Do"
+
+msgid "Ve"
+msgstr "Fr"
+
+msgid "Sa"
+msgstr "Sa"
+
+msgid "Do"
+msgstr "So"
