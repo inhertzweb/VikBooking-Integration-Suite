@@ -134,6 +134,34 @@
     text-align: center;
 }
 
+.vb-mw-cal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 0 10px;
+}
+
+.vb-mw-cal-header h4 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.vb-mw-cal-nav {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 5px 10px;
+    color: #333;
+    transition: color 0.2s;
+}
+
+.vb-mw-cal-nav:hover {
+    color: var(--vb-mw-primary);
+}
+
 .vb-mw-cal-day-name {
     font-weight: bold;
     font-size: 12px;

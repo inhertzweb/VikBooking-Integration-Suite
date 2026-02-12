@@ -67,31 +67,115 @@ jQuery(document).ready(function ($) {
     });
 
     // Simple Calendar Implementation
-    function renderCalendar() {
-        const now = new Date();
-        const currentMonth = now.getMonth();
-        const currentYear = now.getFullYear();
+    let currentViewDate = new Date();
+    // Initialize View Date to first available month if needed
+    if (isMonthFullyClosed(currentViewDate.getMonth(), currentViewDate.getFullYear())) {
+        const next = getNextAvailableMonth(currentViewDate, 1);
+        if (next) currentViewDate = next;
+    }
 
-        let html = '';
-        let monthsToRender = 18;
-        let renderedCount = 0;
+    function getNextAvailableMonth(date, direction = 1) {
+        let tempDate = new Date(date);
         let offset = 0;
+        // Search up to 24 months
+        while (offset < 24) {
+            tempDate.setMonth(tempDate.getMonth() + direction);
+            // If direction is -1 (back), we shouldn't go before today's actual month
+            if (direction === -1) {
+                const today = new Date();
+                today.setDate(1);
+                today.setHours(0, 0, 0, 0);
+                if (tempDate < today) return null;
+            }
 
-        // Try to render 18 available months, up to 2 years in the future
-        while (renderedCount < monthsToRender && offset < 24) {
-            const date = new Date(currentYear, currentMonth + offset, 1);
-            const mon = date.getMonth();
-            const yr = date.getFullYear();
-
-            if (!isMonthFullyClosed(mon, yr)) {
-                html += renderMonth(mon, yr);
-                renderedCount++;
+            if (!isMonthFullyClosed(tempDate.getMonth(), tempDate.getFullYear())) {
+                return tempDate;
             }
             offset++;
         }
+        return null;
+    }
 
-        $calendarContainer.html(html);
+    function renderCalendar() {
+        const month = currentViewDate.getMonth();
+        const year = currentViewDate.getFullYear();
+
+        const monthNames = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno",
+            "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"
+        ];
+
+        let headerHtml = `
+            <div class="vb-mw-cal-header">
+                <button type="button" class="vb-mw-cal-nav vb-mw-prev">&lsaquo;</button>
+                <h4>${monthNames[month]} ${year}</h4>
+                <button type="button" class="vb-mw-cal-nav vb-mw-next">&rsaquo;</button>
+            </div>
+        `;
+
+        let gridHtml = renderMonthGrid(month, year);
+
+        $calendarContainer.html(headerHtml + gridHtml);
         updateSelectionStyles();
+    }
+
+    // Navigation Events
+    $calendarContainer.on('click', '.vb-mw-prev', function (e) {
+        e.stopPropagation();
+        const prev = getNextAvailableMonth(currentViewDate, -1);
+        if (prev) {
+            currentViewDate = prev;
+            renderCalendar();
+        }
+    });
+
+    $calendarContainer.on('click', '.vb-mw-next', function (e) {
+        e.stopPropagation();
+        const next = getNextAvailableMonth(currentViewDate, 1);
+        if (next) {
+            currentViewDate = next;
+            renderCalendar();
+        }
+    });
+
+    function renderMonthGrid(month, year) {
+        const dayNames = ["Lu", "Ma", "Me", "Gi", "Ve", "Sa", "Do"];
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        let startingDay = firstDay === 0 ? 6 : firstDay - 1;
+
+        let html = `<div class="vb-mw-calendar-month"><div class="vb-mw-calendar-grid">`;
+
+        dayNames.forEach(d => html += `<div class="vb-mw-cal-day-name">${d}</div>`);
+
+        for (let i = 0; i < startingDay; i++) {
+            html += '<div class="vb-mw-cal-day empty"></div>';
+        }
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        for (let day = 1; day <= daysInMonth; day++) {
+            const date = new Date(year, month, day);
+            const isPast = date < today;
+
+            const yyyy = date.getFullYear();
+            const mm = String(date.getMonth() + 1).padStart(2, '0');
+            const dd = String(date.getDate()).padStart(2, '0');
+            const dateStr = `${yyyy}-${mm}-${dd}`;
+
+            const isBooked = bookedDates.indexOf(dateStr) !== -1;
+
+            const classes = ['vb-mw-cal-day'];
+            if (isPast || isBooked) classes.push('disabled');
+            if (isBooked) classes.push('booked');
+            if (date.getTime() === today.getTime()) classes.push('today');
+
+            html += `<div class="${classes.join(' ')}" data-date="${dateStr}">${day}</div>`;
+        }
+
+        html += '</div></div>';
+        return html;
     }
 
     function isMonthFullyClosed(month, year) {
@@ -118,53 +202,6 @@ jQuery(document).ready(function ($) {
         return !hasAvailableDay;
     }
 
-    function renderMonth(month, year) {
-        const monthNames = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno",
-            "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"
-        ];
-        const dayNames = ["Lu", "Ma", "Me", "Gi", "Ve", "Sa", "Do"];
-        const firstDay = new Date(year, month, 1).getDay();
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-        // Adjust firstDay for Monday start (0=Sun, 1=Mon... -> 6=Sun, 0=Mon...)
-        let startingDay = firstDay === 0 ? 6 : firstDay - 1;
-
-        let html = `<div class="vb-mw-calendar-month">
-            <h4>${monthNames[month]} ${year}</h4>
-            <div class="vb-mw-calendar-grid">`;
-
-        dayNames.forEach(d => html += `<div class="vb-mw-cal-day-name">${d}</div>`);
-
-        for (let i = 0; i < startingDay; i++) {
-            html += '<div class="vb-mw-cal-day empty"></div>';
-        }
-
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
-        for (let day = 1; day <= daysInMonth; day++) {
-            const date = new Date(year, month, day);
-            const isPast = date < today;
-
-            // Format date as YYYY-MM-DD for comparison with bookedDates
-            const yyyy = date.getFullYear();
-            const mm = String(date.getMonth() + 1).padStart(2, '0');
-            const dd = String(date.getDate()).padStart(2, '0');
-            const dateStr = `${yyyy}-${mm}-${dd}`;
-
-            const isBooked = bookedDates.indexOf(dateStr) !== -1;
-
-            const classes = ['vb-mw-cal-day'];
-            if (isPast || isBooked) classes.push('disabled');
-            if (isBooked) classes.push('booked');
-            if (date.getTime() === today.getTime()) classes.push('today');
-
-            html += `<div class="${classes.join(' ')}" data-date="${dateStr}">${day}</div>`;
-        }
-
-        html += '</div></div>';
-        return html;
-    }
 
     $calendarContainer.on('click', '.vb-mw-cal-day:not(.disabled):not(.empty)', function () {
         const dateStr = $(this).data('date');
