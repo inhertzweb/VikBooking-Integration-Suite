@@ -32,7 +32,7 @@ jQuery(document).ready(function ($) {
 
     // Open/Close Modal
     $openBtn.on('click', function () {
-        $modal.fadeIn(200);
+        $modal.css('display', 'flex').hide().fadeIn(200);
         renderCalendar();
     });
 

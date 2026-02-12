@@ -86,7 +86,7 @@ class VB_Mobile_Widget {
             </div>
 
             <!-- Booking Modal -->
-            <div id="vb-mw-modal" class="vb-mw-modal">
+            <div id="vb-mw-modal" class="vb-mw-modal" style="display: none;">
                 <div class="vb-mw-modal-content">
                     <div class="vb-mw-modal-header">
                         <h3>Seleziona Date</h3>

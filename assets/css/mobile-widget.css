@@ -70,7 +70,8 @@
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
-    display: flex;
+    display: none;
+    /* Hidden by default */
     align-items: flex-end;
     z-index: 1000000;
 }
