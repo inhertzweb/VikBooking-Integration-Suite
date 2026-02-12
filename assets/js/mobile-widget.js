@@ -73,12 +73,12 @@ jQuery(document).ready(function ($) {
         const currentYear = now.getFullYear();
 
         let html = '';
-        let monthsToRender = 6;
+        let monthsToRender = 18;
         let renderedCount = 0;
         let offset = 0;
 
-        // Try to render 6 available months, up to a year in the future
-        while (renderedCount < monthsToRender && offset < 12) {
+        // Try to render 18 available months, up to 2 years in the future
+        while (renderedCount < monthsToRender && offset < 24) {
             const date = new Date(currentYear, currentMonth + offset, 1);
             const mon = date.getMonth();
             const yr = date.getFullYear();

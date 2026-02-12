@@ -154,9 +154,9 @@ class VB_Mobile_Widget {
             $total_units_available += (int)$room['units'];
         }
 
-        // 2. Load busy records for the next 6 months
+        // 2. Load busy records for the next 18 months
         $from_ts = time();
-        $max_ts = strtotime('+6 months', $from_ts);
+        $max_ts = strtotime('+18 months', $from_ts);
         
         // Load busy records using VikBooking helper
         $busy_records = VikBooking::loadBusyRecords($room_ids, $from_ts, $max_ts);
