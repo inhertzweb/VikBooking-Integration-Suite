@@ -95,9 +95,10 @@ class VB_AB_Testing_Popup {
             }
             
             $cta_text = !empty($offer['coupon']) ? __('Copia e Prenota', 'vikbooking-integration-suite') : __('Prenota Ora', 'vikbooking-integration-suite');
+            $href = !empty($offer['custom_url']) ? esc_url($offer['custom_url']) : '#';
             
             printf(
-                '<div class="vb-ab-popup-instance vb-offer-popup" data-offer-id="%d" data-coupon="%s" data-url="%s">
+                '<div class="vb-ab-popup-instance vb-offer-popup" data-offer-id="%d" data-coupon="%s">
                     <div class="vb-offer-header">
                         <h4 class="vb-offer-title">%s</h4>
                         <button class="vb-offer-close" aria-label="Close">&times;</button>
@@ -107,15 +108,15 @@ class VB_AB_Testing_Popup {
                         <div class="vb-offer-content">%s</div>
                     </div>
                     <div class="vb-offer-footer">
-                        <button class="vb-offer-cta">%s</button>
+                        <a href="%s" class="vb-offer-cta">%s</a>
                     </div>
                 </div>',
                 $offer['id'],
                 esc_attr($offer['coupon']),
-                esc_url($offer['custom_url']),
                 esc_html($offer['title']),
                 $thumbnail_html,
                 $offer['content'],
+                $href,
                 esc_html($cta_text)
             );
         }

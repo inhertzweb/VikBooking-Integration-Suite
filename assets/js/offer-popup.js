@@ -111,8 +111,8 @@ document.addEventListener('DOMContentLoaded', function () {
     function openDestination(popupEl, ctaBtn) {
         setTimeout(() => {
             popupEl.classList.remove('vb-offer-show');
-            const customUrl = popupEl.getAttribute('data-url');
-            if (customUrl) {
+            const customUrl = ctaBtn.getAttribute('href');
+            if (customUrl && customUrl !== '#' && customUrl.trim() !== '') {
                 window.location.href = customUrl;
                 return;
             }
