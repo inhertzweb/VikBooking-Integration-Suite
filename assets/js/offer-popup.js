@@ -3,62 +3,45 @@
  */
 
 document.addEventListener('DOMContentLoaded', function () {
-    if (typeof vbOfferSettings === 'undefined' || !vbOfferSettings.offers || vbOfferSettings.offers.length === 0) {
-        return;
-    }
-
     const container = document.getElementById('vb-offer-popup-container');
     if (!container) return;
 
-    const offers = vbOfferSettings.offers;
-    let selectedOffer = null;
+    const offerElements = Array.from(container.querySelectorAll('.vb-ab-popup-instance'));
+    if (offerElements.length === 0) return;
+
+    let selectedEl = null;
+    let selectedOfferId = null;
 
     // Check if we already have an offer assigned in localStorage for consistency
     const savedOfferId = localStorage.getItem('vb_ab_offer_id');
     
     if (savedOfferId) {
-        selectedOffer = offers.find(o => o.id == savedOfferId);
+        selectedEl = offerElements.find(el => el.getAttribute('data-offer-id') === savedOfferId);
     }
 
     // If no saved offer or saved offer is no longer active, pick a random one
-    if (!selectedOffer) {
-        const randomIndex = Math.floor(Math.random() * offers.length);
-        selectedOffer = offers[randomIndex];
-        localStorage.setItem('vb_ab_offer_id', selectedOffer.id);
+    if (!selectedEl) {
+        const randomIndex = Math.floor(Math.random() * offerElements.length);
+        selectedEl = offerElements[randomIndex];
+        selectedOfferId = selectedEl.getAttribute('data-offer-id');
+        localStorage.setItem('vb_ab_offer_id', selectedOfferId);
+    } else {
+        selectedOfferId = savedOfferId;
     }
 
-    // Build the popup HTML
-    let thumbnailHtml = '';
-    if (selectedOffer.thumbnail) {
-        thumbnailHtml = `<img src="${selectedOffer.thumbnail}" alt="${selectedOffer.title}" class="vb-offer-thumbnail">`;
-    }
+    // Remove all other offers from DOM to avoid duplicate IDs/content footprint
+    offerElements.forEach(el => {
+        if (el !== selectedEl) {
+            el.remove();
+        }
+    });
 
-    // Determine CTA Text
-    let ctaText = vbOfferSettings.labels.copyBtn;
-    if (!selectedOffer.coupon) {
-        ctaText = 'Prenota Ora'; // Testo predefinito per offerte senza coupon
-    }
-
-    const popupHtml = `
-        <div id="vb-ab-popup" class="vb-offer-popup" data-offer-id="${selectedOffer.id}" data-coupon="${selectedOffer.coupon}" data-url="${selectedOffer.custom_url}">
-            <div class="vb-offer-header">
-                <h4 class="vb-offer-title">${selectedOffer.title}</h4>
-                <button class="vb-offer-close" aria-label="Close">&times;</button>
-            </div>
-            <div class="vb-offer-body">
-                ${thumbnailHtml}
-                <div class="vb-offer-content">${selectedOffer.content}</div>
-            </div>
-            <div class="vb-offer-footer">
-                <button class="vb-offer-cta">${ctaText}</button>
-            </div>
-        </div>
-    `;
-
-    container.innerHTML = popupHtml;
+    // We now have exactly one offer popup element
+    selectedEl.style.display = '';
+    selectedEl.id = 'vb-ab-popup';
     container.style.display = 'block';
 
-    const popupEl = document.getElementById('vb-ab-popup');
+    const popupEl = selectedEl;
     const closeBtn = popupEl.querySelector('.vb-offer-close');
     const ctaBtn = popupEl.querySelector('.vb-offer-cta');
 
@@ -91,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
         
         if (!isBlocked) {
             popupEl.classList.add('vb-offer-show');
-            trackEvent('vb_track_offer_view', selectedOffer.id);
+            trackEvent('vb_track_offer_view', selectedOfferId);
         }
     }, 3000);
 
@@ -127,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // CTA Logic: copy coupon, track click, open booking widget
     ctaBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        trackEvent('vb_track_offer_click', selectedOffer.id);
+        trackEvent('vb_track_offer_click', selectedOfferId);
         
         // Block for 30 days globally (30 * 24 = 720 hours)
         setCookie('vb_ab_offer_blocked', 'true', 720);

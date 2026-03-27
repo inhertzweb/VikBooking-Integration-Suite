@@ -34,9 +34,7 @@ class VB_AB_Testing_Popup {
 
         wp_localize_script('vb-offer-popup-js', 'vbOfferSettings', [
             'ajaxUrl' => admin_url('admin-ajax.php'),
-            'offers'  => $active_offers,
             'labels'  => [
-                'copyBtn' => __('Copia e Prenota', 'vikbooking-integration-suite'),
                 'copied'  => __('Codice Copiato!', 'vikbooking-integration-suite'),
             ]
         ]);
@@ -89,8 +87,40 @@ class VB_AB_Testing_Popup {
         if (empty($active_offers)) {
             return;
         }
-        // Container injected here. JS will handle displaying the right offer safely.
-        echo '<div id="vb-offer-popup-container" style="display:none;"></div>';
+        
+        echo '<div id="vb-offer-popup-container" style="display:none;">';
+        foreach ($active_offers as $offer) {
+            $thumbnail_html = '';
+            if (!empty($offer['thumbnail'])) {
+                $thumbnail_html = sprintf('<img src="%s" alt="%s" class="vb-offer-thumbnail">', esc_url($offer['thumbnail']), esc_attr($offer['title']));
+            }
+            
+            $cta_text = !empty($offer['coupon']) ? __('Copia e Prenota', 'vikbooking-integration-suite') : __('Prenota Ora', 'vikbooking-integration-suite');
+            
+            printf(
+                '<div class="vb-ab-popup-instance vb-offer-popup" data-offer-id="%d" data-coupon="%s" data-url="%s" style="display:none;">
+                    <div class="vb-offer-header">
+                        <h4 class="vb-offer-title">%s</h4>
+                        <button class="vb-offer-close" aria-label="Close">&times;</button>
+                    </div>
+                    <div class="vb-offer-body">
+                        %s
+                        <div class="vb-offer-content">%s</div>
+                    </div>
+                    <div class="vb-offer-footer">
+                        <button class="vb-offer-cta">%s</button>
+                    </div>
+                </div>',
+                $offer['id'],
+                esc_attr($offer['coupon']),
+                esc_url($offer['custom_url']),
+                esc_html($offer['title']),
+                $thumbnail_html,
+                $offer['content'],
+                esc_html($cta_text)
+            );
+        }
+        echo '</div>';
     }
 
     public static function ajax_track_view() {
