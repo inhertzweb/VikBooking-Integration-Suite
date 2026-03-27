@@ -67,16 +67,38 @@ document.addEventListener('DOMContentLoaded', function () {
         return null;
     }
 
-    // Show popup after a short delay (e.g. 3 seconds)
-    setTimeout(() => {
-        // Only show if the global blocked cookie is not set
-        const isBlocked = getCookie('vb_ab_offer_blocked');
-        
-        if (!isBlocked) {
+    const isBlocked = getCookie('vb_ab_offer_blocked');
+    let offerShown = false;
+
+    function showPopup() {
+        if (!isBlocked && !offerShown) {
+            offerShown = true;
             popupEl.classList.add('vb-offer-show');
             trackEvent('vb_track_offer_view', selectedOfferId);
         }
-    }, 3000);
+    }
+
+    if (window.innerWidth <= 768) {
+        const scrollTrigger = () => {
+            const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+            if (maxScroll <= 0) {
+                showPopup();
+                window.removeEventListener('scroll', scrollTrigger);
+                return;
+            }
+            const scrollPercent = (window.scrollY / maxScroll) * 100;
+            if (scrollPercent >= 25) {
+                showPopup();
+                window.removeEventListener('scroll', scrollTrigger);
+            }
+        };
+        // Initial check in case they load already scrolled down
+        scrollTrigger();
+        window.addEventListener('scroll', scrollTrigger, { passive: true });
+    } else {
+        // Desktop: wait 3 seconds
+        setTimeout(showPopup, 3000);
+    }
 
     // Close logic
     closeBtn.addEventListener('click', () => {

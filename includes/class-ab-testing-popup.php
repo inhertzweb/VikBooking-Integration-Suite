@@ -87,8 +87,7 @@ class VB_AB_Testing_Popup {
         if (empty($active_offers)) {
             return;
         }
-        
-        echo '<div id="vb-offer-popup-container" style="display:none;">';
+        echo '<div id="vb-offer-popup-container">';
         foreach ($active_offers as $offer) {
             $thumbnail_html = '';
             if (!empty($offer['thumbnail'])) {
@@ -98,7 +97,7 @@ class VB_AB_Testing_Popup {
             $cta_text = !empty($offer['coupon']) ? __('Copia e Prenota', 'vikbooking-integration-suite') : __('Prenota Ora', 'vikbooking-integration-suite');
             
             printf(
-                '<div class="vb-ab-popup-instance vb-offer-popup" data-offer-id="%d" data-coupon="%s" data-url="%s" style="display:none;">
+                '<div class="vb-ab-popup-instance vb-offer-popup" data-offer-id="%d" data-coupon="%s" data-url="%s">
                     <div class="vb-offer-header">
                         <h4 class="vb-offer-title">%s</h4>
                         <button class="vb-offer-close" aria-label="Close">&times;</button>
