@@ -1,6 +1,8 @@
 # VikBooking Integration Suite
 
-A comprehensive WordPress plugin that integrates VikBooking with Google Analytics 4, FluentCRM, and provides advanced booking management features including Channel Manager (OTA) support.
+A comprehensive WordPress plugin that integrates VikBooking with Google Analytics 4, FluentCRM, and provides advanced booking management features including Channel Manager (OTA) support and a Mobile Booking Widget.
+
+**Current Version: 1.1.6**
 
 ## Features
 
@@ -24,6 +26,40 @@ A comprehensive WordPress plugin that integrates VikBooking with Google Analytic
 - **List Management**: Automatically adds guests to "Ospiti Hotel" list
 - **Custom Fields**: Tracks booking source, dates, and amounts
 - **Source Tracking**: Identifies contacts from VikBooking
+
+### 📱 Mobile Booking Widget
+- **Sticky Bottom Bar**: Fixed action bar rendered on mobile devices via `wp_footer`
+- **Three Quick-Action Buttons**:
+  - **PRENOTA** – Opens a modal with an interactive date-range calendar
+  - **CHIAMA** – Direct call-to-action link (configurable phone number URL)
+  - **RICHIEDI OFFERTA** – Link to a custom offer/inquiry page
+- **Interactive Availability Calendar**:
+  - Multi-month scrollable calendar built in pure JavaScript (no external dependencies)
+  - Real-time availability via AJAX: queries VikBooking busy records for the next 18 months
+  - Fully booked dates and structural closing dates (from VikBooking) are displayed as unavailable
+  - Date-range selection with check-in / check-out picking
+  - Validation: prevents selection of ranges that include unavailable dates
+- **Guest Selector**: Counter inputs for Adults (default 2) and Children (default 0), included in the booking URL query string
+- **Booking URL Builder**: On confirmation, redirects to the configured booking page with `checkin`, `checkout`, `adults`, and `children` URL parameters
+- **Fully Customizable Colors** (per button): background and text color via WordPress options
+- **Dynamic CSS Variables**: Colors are injected as CSS custom properties (`--vb-mw-prenota-bg`, etc.) for easy theming
+- **i18n Ready**: All labels use `__()` / `_e()` with the `vikbooking-integration-suite` text domain
+- **Conditional Activation**: The widget only loads (assets + HTML) when explicitly enabled in settings
+
+### 🎁 Offers System & A/B Testing
+- **New Custom Post Type (`vb_offer`)**: Create promotional offers directly from the WordPress Admin menu (under VikBooking Integration).
+- **Auto-sync Coupons**: When an offer is created or updated, the associated coupon code and discount are automatically written into the VikBooking internal tables. 
+- **Non-Invasive Popup UI**: 
+  - On desktop: Appears as a sleek toast-notification at the bottom left.
+  - On mobile: Appears from the bottom without overlapping the sticky Mobile Booking Widget.
+  - Includes image thumbnail, offer text, and a Call-To-Action (Copia e Prenota).
+- **Smart Logic & CTA**: Clicking the CTA automatically copies the discount code to the clipboard and triggers the Mobile Booking Widget calendar to open instantly.
+- **Native A/B Testing**: 
+  - The plugin automatically fetches active offers and randomly assigns one per user.
+  - The choice is saved in `localStorage` to guarantee consistent experience across multiple pages within the same session.
+- **Performance Metrics**: 
+  - Impressions (Views) and Clicks are incremented asynchronously via AJAX.
+  - The Admin list table displays the metrics and automatically calculates the **CTR (Click-Through Rate)** for each offer to measure the best performer.
 
 ### 📝 Advanced Logging System
 - **Structured Logging**: Database-backed logging system with categorization
@@ -83,6 +119,34 @@ Contacts will be automatically created/updated with each booking.
 
 You'll now receive emails for every OTA booking.
 
+### Mobile Booking Widget Setup
+
+1. Go to **Settings → VikBooking Integration**
+2. Enable **Mobile Booking Widget**
+3. Set the **Booking URL** – the page where VikBooking's booking form is located (relative path or full URL)
+4. Configure the **CHIAMA** link (phone number URL, e.g. `tel:+390000000000`)
+5. Configure the **RICHIEDI OFFERTA** link (URL to your offer/contact page)
+6. Customize button colors (background and text) for each of the three action buttons:
+   - **Prenota**: default `#faff4d` background / `#000000` text
+   - **Chiama**: default `#ffffff` background / `#000000` text
+   - **Offerta**: default `#69b1e9` background / `#ffffff` text
+7. Save settings
+
+The widget will appear as a sticky bar at the bottom of every frontend page on mobile.
+
+| Option Key | Description | Default |
+|---|---|---|
+| `vb_integration_mw_enabled` | Enable/disable the widget | `0` |
+| `vb_integration_mw_booking_url` | URL of the VikBooking booking page | `` |
+| `vb_integration_mw_prenota_bg` | Prenota button background color | `#faff4d` |
+| `vb_integration_mw_prenota_text` | Prenota button text color | `#000000` |
+| `vb_integration_mw_chiama_bg` | Chiama button background color | `#ffffff` |
+| `vb_integration_mw_chiama_text` | Chiama button text color | `#000000` |
+| `vb_integration_mw_chiama_link` | Chiama button URL | `` |
+| `vb_integration_mw_offerta_bg` | Offerta button background color | `#69b1e9` |
+| `vb_integration_mw_offerta_text` | Offerta button text color | `#ffffff` |
+| `vb_integration_mw_offerta_link` | Offerta button URL | `` |
+
 ## Usage
 
 ### Viewing Logs
@@ -139,19 +203,55 @@ $stats = VB_Logger::get_stats();
 VB_Logger::clear_old_logs(30);
 ```
 
+### Mobile Widget – AJAX Availability Endpoint
+
+The widget exposes a public AJAX action to fetch fully booked dates:
+
+```
+POST /wp-admin/admin-ajax.php
+action: vb_mw_get_availability
+```
+
+**Response (success):**
+```json
+{
+  "success": true,
+  "data": ["2025-08-01", "2025-08-02", "2025-12-25"]
+}
+```
+
+The endpoint:
+1. Loads all active VikBooking rooms and their total unit count
+2. Queries busy records for the next 18 months via `VikBooking::loadBusyRecords()`
+3. Calculates daily occupancy and flags dates where all units are occupied
+4. Merges global structural closing dates via `VikBooking::getClosingDates()`
+5. Returns the combined array of unavailable date strings (`YYYY-MM-DD`)
+
+The JavaScript calendar uses this response to render unavailable days and prevent invalid date-range selection.
+
 ## File Structure
 
 ```
 vikbooking-integration-suite/
 ├── admin/
-│   ├── admin-page.php          # Main settings page
-│   └── logs-page.php            # Log viewer page
+│   ├── admin-page.php               # Main settings page (incl. Mobile Widget options)
+│   └── logs-page.php                # Log viewer page
+├── assets/
+│   ├── css/
+│   │   ├── mobile-widget.css        # Mobile widget styles & CSS variables
+│   │   └── offer-popup.css          # Offers A/B Testing Popup styles
+│   └── js/
+│       ├── mobile-widget.js         # Calendar, AJAX availability, booking URL builder
+│       └── offer-popup.js           # Offers A/B Testing & Tracking logic
 ├── includes/
-│   ├── class-booking-handler.php      # Booking event handler
+│   ├── class-ab-testing-popup.php      # A/B Testing Frontend & Tracking
+│   ├── class-booking-handler.php       # Booking event handler
 │   ├── class-fluentcrm-integration.php # FluentCRM integration
 │   ├── class-google-analytics.php      # GA4 integration
-│   └── class-logger.php                # Logging system
-└── vikbooking-integration-suite.php   # Main plugin file
+│   ├── class-logger.php                # Logging system
+│   ├── class-mobile-widget.php         # Mobile booking widget
+│   └── class-offers-manager.php        # Offers CPT & VikBooking Coupon Sync
+└── vikbooking-integration-suite.php    # Main plugin file
 ```
 
 ## Database Tables
@@ -194,7 +294,43 @@ Stores all plugin activity logs with the following structure:
 3. Review logs for `fluentcrm` events
 4. Ensure email addresses are valid
 
+### Mobile Widget Not Appearing
+
+1. Verify the widget is enabled in **Settings → VikBooking Integration**
+2. The widget only renders on the frontend (not in the WordPress admin)
+3. Check that the **Booking URL** option points to your VikBooking page
+4. Open the browser DevTools console and look for JavaScript errors
+5. Confirm VikBooking is active (`VikBooking` class must exist)
+6. If the calendar shows no unavailable dates, verify that `JFactory::getDbo()` is accessible (requires VikBooking's Joomla compatibility layer)
+
+### Mobile Widget Calendar Not Loading Availability
+
+- Open DevTools → Network tab and inspect the `admin-ajax.php` request with `action=vb_mw_get_availability`
+- A `success: false` response indicates a VikBooking class resolution failure
+- Ensure rooms have `avail = 1` in the VikBooking rooms table
+
 ## Changelog
+
+### Version 1.1.6 (2026-03-27)
+
+- 🎉 **New Feature**: Offers System with A/B Testing (`vb_offer` CPT)
+- 🎉 **New Feature**: Auto-synchronization of offers with VikBooking coupons
+- 🎉 **New Feature**: Smart, non-invasive frontend popup that tracks Views & Clicks
+- 🐛 Bug fixes and stability improvements for the Mobile Widget
+
+### Version 1.1.0 (2026-01-01)
+
+**Mobile Booking Widget**
+
+- ✅ Sticky mobile bottom bar with three action buttons (Prenota, Chiama, Richiedi Offerta)
+- ✅ Interactive multi-month date-range calendar (pure JS, no dependencies)
+- ✅ Real-time availability via AJAX using VikBooking busy records
+- ✅ Structural closing dates integration via `VikBooking::getClosingDates()`
+- ✅ Guest selector (Adults / Children) with counter inputs
+- ✅ Booking URL builder with check-in, check-out, adults, children query params
+- ✅ Fully customizable button colors via WordPress options
+- ✅ Dynamic CSS custom properties injection for theming
+- ✅ i18n ready with `vikbooking-integration-suite` text domain
 
 ### Version 1.0.0 (2025-12-05)
 

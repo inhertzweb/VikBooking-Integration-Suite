@@ -1,0 +1,124 @@
+/* Offer Popup Styles */
+
+:root {
+    --vb-offer-bg: #ffffff;
+    --vb-offer-text: #333333;
+    --vb-offer-accent: #2e7d32; /* Default green accent */
+    --vb-offer-border: #e0e0e0;
+    --vb-offer-shadow: rgba(0, 0, 0, 0.15);
+}
+
+.vb-offer-popup {
+    position: fixed;
+    bottom: -150%;
+    left: 20px;
+    width: 350px;
+    max-width: calc(100vw - 40px);
+    background-color: var(--vb-offer-bg);
+    color: var(--vb-offer-text);
+    border: 1px solid var(--vb-offer-border);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px var(--vb-offer-shadow);
+    z-index: 9998; /* Just below the mobile widget which is 9999 normally */
+    transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease;
+    opacity: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.vb-offer-popup.vb-offer-show {
+    bottom: 20px;
+    opacity: 1;
+}
+
+/* On mobile, move it above the mobile booking widget (which is sticky bottom) */
+@media (max-width: 768px) {
+    .vb-offer-popup {
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+    }
+    .vb-offer-popup.vb-offer-show {
+        bottom: 80px; /* Space for the Mobile Widget */
+    }
+}
+
+.vb-offer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background-color: #f9f9f9;
+    border-bottom: 1px solid var(--vb-offer-border);
+}
+
+.vb-offer-title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--vb-offer-accent);
+}
+
+.vb-offer-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    line-height: 1;
+    color: #999;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+}
+
+.vb-offer-close:hover {
+    color: #333;
+}
+
+.vb-offer-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.vb-offer-thumbnail {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.vb-offer-content {
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.vb-offer-footer {
+    padding: 0 16px 16px;
+    display: flex;
+    justify-content: center;
+}
+
+.vb-offer-cta {
+    display: inline-block;
+    width: 100%;
+    padding: 10px 16px;
+    background-color: var(--vb-offer-accent);
+    color: #ffffff;
+    text-align: center;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.vb-offer-cta:hover {
+    background-color: #1b5e20;
+    color: #ffffff;
+}

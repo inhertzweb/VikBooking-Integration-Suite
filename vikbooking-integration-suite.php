@@ -55,6 +55,8 @@ function vb_integration_init() {
     require_once VB_INTEGRATION_PLUGIN_PATH . 'includes/class-booking-handler.php';
     require_once VB_INTEGRATION_PLUGIN_PATH . 'includes/class-google-analytics.php';
     require_once VB_INTEGRATION_PLUGIN_PATH . 'includes/class-fluentcrm-integration.php';
+    require_once VB_INTEGRATION_PLUGIN_PATH . 'includes/class-offers-manager.php';
+    require_once VB_INTEGRATION_PLUGIN_PATH . 'includes/class-ab-testing-popup.php';
     
     // Initialize logger
     VB_Logger::init();
@@ -65,8 +67,13 @@ function vb_integration_init() {
     new VB_FluentCRM_Integration();
     
     // Initialize Mobile Widget
+    // Initialize Mobile Widget
     require_once VB_INTEGRATION_PLUGIN_PATH . 'includes/class-mobile-widget.php';
     VB_Mobile_Widget::init();
+
+    // Initialize Offers & A/B Testing
+    VB_Offers_Manager::init();
+    VB_AB_Testing_Popup::init();
 }
 
 // Hook initialization to plugins_loaded to ensure all plugins are loaded
