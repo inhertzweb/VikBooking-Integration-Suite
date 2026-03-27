@@ -62,14 +62,34 @@ document.addEventListener('DOMContentLoaded', function () {
     const closeBtn = popupEl.querySelector('.vb-offer-close');
     const ctaBtn = popupEl.querySelector('.vb-offer-cta');
 
+    // Helper to manage cookies
+    function setCookie(name, value, hours) {
+        let expires = "";
+        if (hours) {
+            const date = new Date();
+            date.setTime(date.getTime() + (hours * 60 * 60 * 1000));
+            expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+    }
+
+    function getCookie(name) {
+        const nameEQ = name + "=";
+        const ca = document.cookie.split(';');
+        for(let i=0;i < ca.length;i++) {
+            let c = ca[i];
+            while (c.charAt(0)==' ') c = c.substring(1,c.length);
+            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+        }
+        return null;
+    }
+
     // Show popup after a short delay (e.g. 3 seconds)
     setTimeout(() => {
-        // Only show if the user hasn't explicitly dismissed this offer today/recently
-        const dismissed = localStorage.getItem('vb_ab_offer_dismissed_' + selectedOffer.id);
-        const now = new Date().getTime();
+        // Only show if the global blocked cookie is not set
+        const isBlocked = getCookie('vb_ab_offer_blocked');
         
-        // Let's show it if never dismissed or dismissed more than 24h ago
-        if (!dismissed || (now - parseInt(dismissed) > 86400000)) {
+        if (!isBlocked) {
             popupEl.classList.add('vb-offer-show');
             trackEvent('vb_track_offer_view', selectedOffer.id);
         }
@@ -78,7 +98,8 @@ document.addEventListener('DOMContentLoaded', function () {
     // Close logic
     closeBtn.addEventListener('click', () => {
         popupEl.classList.remove('vb-offer-show');
-        localStorage.setItem('vb_ab_offer_dismissed_' + selectedOffer.id, new Date().getTime());
+        // Block for 48 hours globally
+        setCookie('vb_ab_offer_blocked', 'true', 48);
     });
 
     // Handle Opening behavior (Mobile Widget or Custom URL)
@@ -107,6 +128,9 @@ document.addEventListener('DOMContentLoaded', function () {
     ctaBtn.addEventListener('click', (e) => {
         e.preventDefault();
         trackEvent('vb_track_offer_click', selectedOffer.id);
+        
+        // Block for 30 days globally (30 * 24 = 720 hours)
+        setCookie('vb_ab_offer_blocked', 'true', 720);
 
         const coupon = popupEl.getAttribute('data-coupon');
         if (coupon && coupon.trim() !== '') {
