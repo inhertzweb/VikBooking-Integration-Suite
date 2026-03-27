@@ -70,7 +70,7 @@ class VB_AB_Testing_Popup {
                 $offers[] = [
                     'id'          => $post->ID,
                     'title'       => get_the_title($post->ID),
-                    'content'     => apply_filters('the_content', $post->post_content),
+                    'content'     => do_shortcode(wpautop($post->post_content)),
                     'thumbnail'   => get_the_post_thumbnail_url($post->ID, 'medium'),
                     'coupon'      => $coupon_code,
                     'is_percent'  => $discount_type === '1',
